@@ -7,6 +7,7 @@
             Name = name;
             OptimalTemp = optTemp;
             IsAggressive = true;
+            RequiredFood = FoodType.SharkMeat;
         }
 
         public override void Live(double currentTemp, bool isBroken)

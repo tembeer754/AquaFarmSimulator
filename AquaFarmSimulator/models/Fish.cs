@@ -9,6 +9,7 @@ namespace AquaFarmSimulator.Models
             Name = name;
             OptimalTemp = optTemp;
             IsAggressive = false;
+            RequiredFood = FoodType.FishFood;
         }
 
         public override void Live(double currentTemp, bool isBroken)

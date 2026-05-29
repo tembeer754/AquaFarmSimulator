@@ -22,12 +22,13 @@
             btnRepair = new Button();
             lblOxygen = new Label();
             lblHunger = new Label();
+            btnAction = new Button();
             SuspendLayout();
             
             // lblName
-           
+            
             lblName.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            lblName.Location = new Point(10, 10);
+            lblName.Location = new Point(10, 0);
             lblName.Name = "lblName";
             lblName.Size = new Size(180, 25);
             lblName.TabIndex = 0;
@@ -35,8 +36,8 @@
             lblName.Click += lblName_Click;
             
             // prgHealth
-           
-            prgHealth.Location = new Point(10, 40);
+            
+            prgHealth.Location = new Point(10, 28);
             prgHealth.Name = "prgHealth";
             prgHealth.Size = new Size(180, 23);
             prgHealth.TabIndex = 1;
@@ -44,7 +45,7 @@
             
             // lblStatus
             
-            lblStatus.Location = new Point(10, 70);
+            lblStatus.Location = new Point(10, 63);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(180, 20);
             lblStatus.TabIndex = 2;
@@ -53,7 +54,7 @@
             
             // btnFeed
             
-            btnFeed.Location = new Point(10, 150);
+            btnFeed.Location = new Point(14, 126);
             btnFeed.Name = "btnFeed";
             btnFeed.Size = new Size(85, 30);
             btnFeed.TabIndex = 5;
@@ -62,7 +63,7 @@
             
             // btnRepair
             
-            btnRepair.Location = new Point(105, 150);
+            btnRepair.Location = new Point(105, 126);
             btnRepair.Name = "btnRepair";
             btnRepair.Size = new Size(85, 30);
             btnRepair.TabIndex = 6;
@@ -71,7 +72,7 @@
             
             // lblOxygen
             
-            lblOxygen.Location = new Point(10, 95);
+            lblOxygen.Location = new Point(10, 83);
             lblOxygen.Name = "lblOxygen";
             lblOxygen.Size = new Size(180, 20);
             lblOxygen.TabIndex = 3;
@@ -79,13 +80,22 @@
             
             // lblHunger
             
-            lblHunger.Location = new Point(10, 120);
+            lblHunger.Location = new Point(10, 103);
             lblHunger.Name = "lblHunger";
             lblHunger.Size = new Size(180, 20);
             lblHunger.TabIndex = 4;
             lblHunger.Text = "Голод: 0%";
             lblHunger.Click += lblHunger_Click;
             
+            // btnAction
+           
+            btnAction.Location = new Point(10, 167);
+            btnAction.Name = "btnAction";
+            btnAction.Size = new Size(180, 30);
+            btnAction.TabIndex = 7;
+            btnAction.Text = "Забрати / Помістити";
+            btnAction.Click += btnAction_Click;
+           
             // SectorControl
             
             BorderStyle = BorderStyle.FixedSingle;
@@ -96,23 +106,24 @@
             Controls.Add(lblHunger);
             Controls.Add(btnFeed);
             Controls.Add(btnRepair);
+            Controls.Add(btnAction);
             Name = "SectorControl";
             Size = new Size(200, 200);
             Load += SectorControl_Load;
             ResumeLayout(false);
 
-            // У файлі SectorControl.Designer.cs (InitializeComponent)
-            this.btnAction = new System.Windows.Forms.Button();
-            this.btnAction.Location = new System.Drawing.Point(10, 185); 
-            this.btnAction.Name = "btnAction";
-            this.btnAction.Size = new System.Drawing.Size(180, 30);
-            this.btnAction.Text = "Забрати / Помістити";
-            this.btnAction.Click += new System.EventHandler(this.btnAction_Click);
-            this.Controls.Add(this.btnAction);
+            this.menuFeed = new System.Windows.Forms.ContextMenuStrip(this.components);
 
+      
+            var itemFishFood = new System.Windows.Forms.ToolStripMenuItem("Сухий корм (для риб)", null, (s, e) => ProcessFeeding(Models.FoodType.FishFood));
+            var itemMeat = new System.Windows.Forms.ToolStripMenuItem("М'ясо (для акул)", null, (s, e) => ProcessFeeding(Models.FoodType.SharkMeat));
+            var itemPlankton = new System.Windows.Forms.ToolStripMenuItem("Планктон (для молюсків)", null, (s, e) => ProcessFeeding(Models.FoodType.MolluskPlankton));
+            var itemFertilizer = new System.Windows.Forms.ToolStripMenuItem("Добрива (для водоростей)", null, (s, e) => ProcessFeeding(Models.FoodType.AlgaeFertilizer));
 
-
-    }
+   
+            this.menuFeed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { itemFishFood, itemMeat, itemPlankton, itemFertilizer });
+            this.btnFeed.ContextMenuStrip = this.menuFeed;
+        }
 
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.ProgressBar prgHealth;
@@ -122,5 +133,6 @@
         private System.Windows.Forms.Label lblOxygen;
         private System.Windows.Forms.Label lblHunger;
         private System.Windows.Forms.Button btnAction;
+        private System.Windows.Forms.ContextMenuStrip menuFeed;
     }
 }

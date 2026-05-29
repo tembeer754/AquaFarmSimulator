@@ -59,7 +59,7 @@ namespace AquaFarmSimulator
             }
 
             // Інфа про склад
-            this.Text = $"Корм: {Warehouse.Food} | Ремкомплекти: {Warehouse.RepairKits}";
+            this.Text = $"Корм: {Warehouse.FishFood} | Ремкомплекти: {Warehouse.RepairKits}";
         }
 
         private void Form1_Load(object sender, EventArgs e)

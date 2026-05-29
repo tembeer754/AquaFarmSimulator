@@ -16,6 +16,7 @@ namespace AquaFarmSimulator.Models
 
         public abstract void Live(double currentTemp, bool isBroken);
 
+
         public void Eat(double foodAmount)
         {
             if (!IsAlive)
@@ -38,7 +39,7 @@ namespace AquaFarmSimulator.Models
 
         protected void CheckMortalityRisk()
         {
-           
+
             if (Health < 40 && Health > 0)
             {
                 // Шанс померти від 40
@@ -55,15 +56,35 @@ namespace AquaFarmSimulator.Models
             {
                 return Color.DimGray;
             }
-            if (Health < 40) 
+            if (Health < 40)
             {
                 return Color.IndianRed;
             }
-            if (Hunger > 70 || Health < 70) 
+            if (Hunger > 70 || Health < 70)
             {
                 return Color.Goldenrod;
             }
             return Color.ForestGreen;
+        }
+
+        public FoodType RequiredFood { get; protected set; } 
+
+        
+        public virtual string Eat(FoodType food)
+        {
+            if (food == RequiredFood)
+            {
+                Hunger -= 30;
+                if (Hunger < 0) Hunger = 0;
+                Health += 10;
+                if (Health > 100) Health = 100;
+                return "Здоров'я відновлено!";
+            }
+            else
+            {
+                Health -= 20; // ШТРАФ за неправильну їжу
+                return "Це не підходить цьому виду. Здоров'я впало!";
+            }
         }
     }
 }

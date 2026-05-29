@@ -6,6 +6,7 @@
         {
             Name = name;
             OptimalTemp = 22;
+            RequiredFood = FoodType.AlgaeFertilizer;
         }
 
         public override void Live(double currentTemp, bool isBroken)
