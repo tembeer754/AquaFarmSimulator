@@ -9,6 +9,7 @@ namespace AquaFarmSimulator
     {
         private Sector _sector;
         public event Action<SectorControl> OnActionClick;
+        public Sector Sector => _sector;
 
         public SectorControl(Sector sector)
         {
