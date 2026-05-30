@@ -16,7 +16,7 @@
                 return;
             }
 
-            Hunger += 1; // Брак мінералів
+            Hunger += 0.1; // Брак мінералів
             if (Hunger > 90)
             {
                 Health -= 2;

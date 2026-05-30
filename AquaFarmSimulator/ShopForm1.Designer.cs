@@ -52,7 +52,6 @@
             btnBuySalmon.TabIndex = 0;
             btnBuySalmon.Text = "Лосось ($120)";
             btnBuySalmon.UseVisualStyleBackColor = true;
-            btnBuySalmon.Click += btnBuyFish_Click;
             // 
             // btnBuyReefShark
             // 
@@ -71,7 +70,6 @@
             btnBuyKelp.TabIndex = 2;
             btnBuyKelp.Text = "Ламінарія ($60)";
             btnBuyKelp.UseVisualStyleBackColor = true;
-            btnBuyKelp.Click += btnBuyAlgae_Click;
             // 
             // btnBuyFood
             // 

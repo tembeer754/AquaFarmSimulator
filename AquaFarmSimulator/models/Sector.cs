@@ -21,7 +21,7 @@ namespace AquaFarmSimulator.Models
         public void Update()
         {
             // Випадкова поломка аератора (шанс 5%)
-            if (!IsAeratorBroken && _rnd.Next(0, 100) < 5)
+            if (!IsAeratorBroken && _rnd.Next(0, 500) < 2)
             {
                 IsAeratorBroken = true;
             }
@@ -44,8 +44,45 @@ namespace AquaFarmSimulator.Models
                 OxygenLevel = 0;
             }
 
-            // Риба "живе" залежно від умов
-            Entity.Live(Temperature, IsAeratorBroken || OxygenLevel < 30);
+
+            if (Entity != null)
+            {
+                Entity.Live(Temperature, IsAeratorBroken || OxygenLevel < 30);
+            }
+
+            if (Entity != null)
+            {
+                // Поломка аератора (шанс 2 на 500)
+                if (!IsAeratorBroken && _rnd.Next(0, 500) < 2)
+                {
+                    IsAeratorBroken = true;
+                }
+
+                // Рівень кисню
+                if (IsAeratorBroken)
+                {
+                    OxygenLevel -= 5;
+                }
+                else
+                {
+                    if (OxygenLevel < 100) OxygenLevel += 3;
+                }
+
+                if (OxygenLevel < 0) OxygenLevel = 0;
+
+                // Викликаємо життєдіяльність
+                Entity.Live(Temperature, IsAeratorBroken || OxygenLevel < 30);
+
+                // Температура трохи коливається для реалізму (датчики)
+                Temperature += (_rnd.NextDouble() - 0.5);
+            }
+            else
+            {
+                // Якщо секторі порожньо - він самовідновлюється до ідеалу
+                IsAeratorBroken = false;
+                OxygenLevel = 100;
+                Temperature = 20.0;
+            }
         }
 
         public void Repair()

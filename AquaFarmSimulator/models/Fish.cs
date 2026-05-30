@@ -19,21 +19,21 @@ namespace AquaFarmSimulator.Models
                 return;
             }
 
-            Hunger += 2;
+            Hunger += 0.3;
 
             if (Math.Abs(currentTemp - OptimalTemp) > 5)
             {
-                Health -= 3;
+                Health -= 0.5;
             }
 
             if (isBroken)
             {
-                Health -= 5;
+                Health -= 1.0;
             }
 
             if (Hunger > 80)
             {
-                Health -= 4;
+                Health -= 1.5;
             }
 
             CheckMortalityRisk();

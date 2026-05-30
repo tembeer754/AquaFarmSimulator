@@ -7,138 +7,66 @@ namespace AquaFarmSimulator
 {
     public partial class SectorControl : UserControl
     {
-        private Sector _sector;
         public event Action<SectorControl> OnActionClick;
-        public Sector Sector => _sector;
+        public Sector Sector { get; private set; }
 
         public SectorControl(Sector sector)
         {
             InitializeComponent();
-            _sector = sector;
+            Sector = sector;
+            SetupMenu();
+            RefreshUI();
+        }
 
-            if (_sector != null)
-            {
-                lblName.Text = _sector.Entity.Name;
-            }
+        private void SetupMenu()
+        {
+            menuFeed.Items.Clear();
+            menuFeed.Items.Add("Сухий корм", null, (s, e) => ProcessFeeding(FoodType.FishFood));
+            menuFeed.Items.Add("М'ясо", null, (s, e) => ProcessFeeding(FoodType.SharkMeat));
+            menuFeed.Items.Add("Планктон", null, (s, e) => ProcessFeeding(FoodType.MolluskPlankton));
+            menuFeed.Items.Add("Добрива", null, (s, e) => ProcessFeeding(FoodType.AlgaeFertilizer));
+            btnFeed.ContextMenuStrip = menuFeed;
         }
 
         public void RefreshUI()
         {
-            if (_sector == null) return;
+            if (Sector == null) return;
 
-            // Оновлення значень
-            prgHealth.Value = (int)_sector.Entity.Health;
-            lblOxygen.Text = $"Кисень: {(int)_sector.OxygenLevel}%";
-            lblHunger.Text = $"Голод: {(int)_sector.Entity.Hunger}%";
-
-           
-            lblStatus.Text = _sector.IsAeratorBroken ? "АВАРІЯ АЕРАТОРА!" : "Статус: ОК";
-
-          
-            this.BackColor = _sector.Entity.GetStatusColor();
-
-            // Загибель
-            if (!_sector.Entity.IsAlive)
+            if (Sector.Entity == null)
             {
-                lblStatus.Text = "ЗАГИБЕЛЬ";
-                this.Enabled = false;
-            }
-        }
-
-        private void btnAction_Click(object sender, EventArgs e)
-        {
-            OnActionClick?.Invoke(this);
-        }
-
-        private void btnFeed_Click(object sender, EventArgs e)
-        {
-            
-
-            if (menuFeed != null)
-            {
-                menuFeed.Show(btnFeed, new Point(0, btnFeed.Height));
-            }
-        }
-
-        private void btnRepair_Click(object sender, EventArgs e)
-        {
-            if (Warehouse.TryGetRepairKit())
-            {
-                _sector.Repair();
-                RefreshUI();
+                lblName.Text = "ВІЛЬНО";
+                lblStatus.Text = "Готовий";
+                lblHunger.Text = "Голод: -";
+                prgHealth.Value = 0;
+                BackColor = Color.LightGray;
             }
             else
             {
-                MessageBox.Show("Немає запчастин!");
-            }   
+                lblName.Text = Sector.Entity.Name;
+                int healthValue = (int)Sector.Entity.Health;
+                if (healthValue < 0) healthValue = 0;
+                if (healthValue > 100) healthValue = 100;
+                prgHealth.Value = healthValue;
+
+                lblHunger.Text = $"Голод: {(int)Sector.Entity.Hunger}%";
+                BackColor = Sector.Entity.GetStatusColor();
+                lblStatus.Text = Sector.IsAeratorBroken ? "АВАРІЯ!" : "ОК";
+            }
+            lblOxygen.Text = $"Кисень: {(int)Sector.OxygenLevel}%";
         }
 
-        // Вибір їжі
+        private void btnFeed_Click(object sender, EventArgs e) => menuFeed.Show(btnFeed, new Point(0, btnFeed.Height));
+        private void btnRepair_Click(object sender, EventArgs e) { if (Warehouse.TryGetRepairKit()) Sector.Repair(); }
+        private void btnAction_Click(object sender, EventArgs e) => OnActionClick?.Invoke(this);
+
         private void ProcessFeeding(FoodType food)
         {
-            if (_sector == null || _sector.Entity == null || !_sector.Entity.IsAlive)
-            {
-                return;
-            }
-
-            bool hasResource = false;
-
-            // Перевіряємо, чи є вибраний ресурс у Warehouse
-            if (food == FoodType.FishFood && Warehouse.FishFood >= 10)
-            {
-                Warehouse.FishFood -= 10;
-                hasResource = true;
-            }
-            else if (food == FoodType.SharkMeat && Warehouse.SharkMeat >= 10)
-            {
-                Warehouse.SharkMeat -= 10;
-                hasResource = true;
-            }
-            else if (food == FoodType.MolluskPlankton && Warehouse.MolluskFood >= 10)
-            {
-                Warehouse.MolluskFood -= 10;
-                hasResource = true;
-            }
-            else if (food == FoodType.AlgaeFertilizer && Warehouse.Fertilizer >= 10)
-            {
-                Warehouse.Fertilizer -= 10;
-                hasResource = true;
-            }
-
-            if (hasResource)
-            {
-                // Викликаємо наш новий перевантажений метод Eat
-                string message = _sector.Entity.Eat(food);
-
-                
-                MessageBox.Show(message);
-
-                RefreshUI();
-            }
-            else
-            {
-                MessageBox.Show("Цього ресурсу немає на складі!");
-            }
-        }
-
-        private void lblStatus_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblHunger_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SectorControl_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblName_Click(object sender, EventArgs e)
-        {
-
+            if (Sector.Entity == null) return;
+            // Спрощена перевірка для надійності
+            Warehouse.SpendMoney(10); // Умовно
+            string msg = Sector.Entity.Eat(food);
+            MessageBox.Show(msg);
+            RefreshUI();
         }
     }
 }

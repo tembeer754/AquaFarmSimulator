@@ -17,7 +17,7 @@
                 return;
             }
 
-            Hunger += 4;
+            Hunger += 0.6;
 
             if (isBroken)
             {

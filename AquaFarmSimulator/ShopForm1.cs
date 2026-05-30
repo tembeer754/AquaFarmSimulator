@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AquaFarmSimulator.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,19 +13,26 @@ namespace AquaFarmSimulator
 {
     public partial class ShopForm1 : Form
     {
+
+        public AquaticEntity BoughtEntity { get; set; }
+        public string SuccessMessage { get; set; }
         public ShopForm1()
         {
             InitializeComponent();
         }
 
-        private void btnBuyAlgae_Click(object sender, EventArgs e)
+        private void Buy(AquaticEntity entity, double cost)
         {
-
-        }
-
-        private void btnBuyFish_Click(object sender, EventArgs e)
-        {
-
+            if (Warehouse.SpendMoney(cost))
+            {
+                this.BoughtEntity = entity; // Зберігаємо об'єкт
+                this.SuccessMessage = $"Куплено: {entity.Name}"; // Зберігаємо текст
+                this.DialogResult = DialogResult.OK; // Кажемо, що все успішно
+            }
+            else
+            {
+                MessageBox.Show("Немає грошей!");
+            }
         }
     }
 }

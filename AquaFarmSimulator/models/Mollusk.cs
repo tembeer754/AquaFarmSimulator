@@ -20,7 +20,7 @@ namespace AquaFarmSimulator.Models
             }
 
             // Молюски - повільний метоболізм
-            Hunger += 1;
+            Hunger += 0.2;
 
             if (Math.Abs(currentTemp - OptimalTemp) > 5)
             {
